@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context=".CameraPermission">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="80dp">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:src="@drawable/teal_rectange"/>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="60dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/light_blue_rectange"/>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="130dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/slightdark_blue_rectange"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginTop="260dp">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:layout_width="400dp"
+                    android:layout_height="100dp"
+                    android:layout_marginLeft="6dp"
+                    android:src="@drawable/large_white_rectangle" />
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="45dp"
+                    android:src="@drawable/ic_baseline_mic_24"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="8dp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="100dp"
+                    android:paddingTop="15dp"
+                    android:text="Allow access to microphone?"
+                    android:textStyle="bold"
+                    android:textColor="#000000"
+                    android:textSize="20dp" />
+
+                <TextView
+                    android:id="@+id/m_deny"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="210dp"
+                    android:layout_marginTop="55dp"
+                    android:text="Deny"
+                    android:textStyle="bold"
+                    android:textColor="#0F2FCA"
+                    android:textSize="20dp" />
+                <TextView
+                    android:id="@+id/m_allow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="300dp"
+                    android:layout_marginTop="55dp"
+                    android:text="Allow"
+                    android:textStyle="bold"
+                    android:textColor="#0F2FCA"
+                    android:textSize="20dp" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>
