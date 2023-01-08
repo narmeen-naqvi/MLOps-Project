@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
 TextView loginText,signupText;
 EditText username,password;
 CheckBox showPassword;
+DBHelper DB;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +30,7 @@ CheckBox showPassword;
         username = findViewById(R.id.main_username);
         password = findViewById(R.id.main_password);
         showPassword = findViewById(R.id.checkbox);
+        DB = new DBHelper(this);
 
         loginText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -37,7 +39,7 @@ CheckBox showPassword;
                     Toast.makeText(MainActivity.this, "Username and password are required", Toast.LENGTH_SHORT).show();
                 }
                 else{
-                Intent ilogin = new Intent(MainActivity.this,RecordingScreen.class);
+                Intent ilogin = new Intent(MainActivity.this,Login.class);
                 Toast.makeText(MainActivity.this, "Login completed", Toast.LENGTH_SHORT).show();
                 startActivity(ilogin);}
             }
@@ -46,14 +48,26 @@ CheckBox showPassword;
         signupText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String user = username.getText().toString();
+                String pass = password.getText().toString();
+
                 if(username.getText().toString().equals("") || password.getText().toString().equals("")){
                     Toast.makeText(MainActivity.this, "Username and password are required", Toast.LENGTH_SHORT).show();
                 }
                 else{
-                Intent isignup = new Intent(MainActivity.this,RecordingScreen.class);
-                Toast.makeText(MainActivity.this, "Signup completed", Toast.LENGTH_SHORT).show();
-                startActivity(isignup);}
-            }
+                    boolean checkuser = DB.checkusername(user);
+                    if(checkuser == false){
+                        Boolean insert = DB.insertData(user,pass);
+                        if(insert == true){
+                            Toast.makeText(MainActivity.this, "Registered successfully", Toast.LENGTH_SHORT).show();
+                            Intent isignup = new Intent(MainActivity.this,RecordingScreen.class);
+                            startActivity(isignup);
+                        }
+                        else{ Toast.makeText(MainActivity.this, "Registration failed", Toast.LENGTH_SHORT).show(); }
+                    }
+                    else {Toast.makeText(MainActivity.this, "User already exists! Please sign in", Toast.LENGTH_SHORT).show();}
+                    Toast.makeText(MainActivity.this, "Signup completed", Toast.LENGTH_SHORT).show();
+               }}
         });
 
         showPassword.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
