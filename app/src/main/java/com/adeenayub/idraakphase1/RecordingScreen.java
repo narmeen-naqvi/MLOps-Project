@@ -25,7 +25,7 @@ import android.widget.Toast;
 import kotlin.jvm.internal.markers.KMutableList;
 
 public class RecordingScreen extends AppCompatActivity {
-ImageView pause,record,stop;
+ImageView record,camera;
 //video stuff
 private static int CAMERA_PERMISSION_CODE = 100;
 private static int VIDEO_RECORD_CODE = 101;
@@ -42,15 +42,10 @@ private Button text_cancelButton,help_cancelButton;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recording_screen);
 
-        pause = findViewById(R.id.pause_button);
         record = findViewById(R.id.record_button);
-        stop = findViewById(R.id.stop_button);
+        camera = findViewById(R.id.camera_button);
 
-        pause.setOnClickListener(v -> {
-            Toast.makeText(this, "Pause clicked", Toast.LENGTH_SHORT).show();
-        });
-
-        stop.setOnClickListener(v -> {
+        camera.setOnClickListener(v -> {
             //using this for image capture for now
             Toast.makeText(this, "Stop clicked", Toast.LENGTH_SHORT).show();
             if (isCameraPresentInPhone()){
@@ -97,6 +92,8 @@ private Button text_cancelButton,help_cancelButton;
                 return true;
             case R.id.dictionary_option:
                 Toast.makeText(this, "Dictionary option selected", Toast.LENGTH_SHORT).show();
+                Intent idic = new Intent(RecordingScreen.this, DictionaryContents.class);
+                startActivity(idic);
                 return true;
             case R.id.help_option:
                 Toast.makeText(this, "Help option selected", Toast.LENGTH_SHORT).show();

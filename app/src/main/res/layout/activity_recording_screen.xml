@@ -21,26 +21,19 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/pause_button"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginTop="630dp"
-            android:layout_marginLeft="20dp"
-            android:src="@drawable/pause"/>
-        <ImageView
             android:id="@+id/record_button"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginTop="630dp"
-            android:layout_marginLeft="170dp"
+            android:layout_marginLeft="100dp"
             android:src="@drawable/recording_button"/>
         <ImageView
-            android:id="@+id/stop_button"
+            android:id="@+id/camera_button"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginTop="630dp"
-            android:layout_marginLeft="310dp"
-            android:src="@drawable/stop"/>
+            android:layout_marginLeft="210dp"
+            android:src="@drawable/ic_baseline_photo_camera_24"/>
     </RelativeLayout>
 
 </RelativeLayout>

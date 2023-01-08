@@ -31,7 +31,7 @@ EditText username,password;
                     Toast.makeText(MainActivity.this, "Username and password are required", Toast.LENGTH_SHORT).show();
                 }
                 else{
-                Intent ilogin = new Intent(MainActivity.this,CameraPermission.class);
+                Intent ilogin = new Intent(MainActivity.this,RecordingScreen.class);
                 Toast.makeText(MainActivity.this, "Login completed", Toast.LENGTH_SHORT).show();
                 startActivity(ilogin);}
             }
@@ -44,7 +44,7 @@ EditText username,password;
                     Toast.makeText(MainActivity.this, "Username and password are required", Toast.LENGTH_SHORT).show();
                 }
                 else{
-                Intent isignup = new Intent(MainActivity.this,CameraPermission.class);
+                Intent isignup = new Intent(MainActivity.this,RecordingScreen.class);
                 Toast.makeText(MainActivity.this, "Signup completed", Toast.LENGTH_SHORT).show();
                 startActivity(isignup);}
             }
