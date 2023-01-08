@@ -4,7 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -12,6 +16,7 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
 TextView loginText,signupText;
 EditText username,password;
+CheckBox showPassword;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,6 +28,7 @@ EditText username,password;
         signupText = findViewById(R.id.signup);
         username = findViewById(R.id.main_username);
         password = findViewById(R.id.main_password);
+        showPassword = findViewById(R.id.checkbox);
 
         loginText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,5 +55,18 @@ EditText username,password;
                 startActivity(isignup);}
             }
         });
+
+        showPassword.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b){
+                    password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                }
+                else{
+                    password.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                }
+            }
+        });
+
     }
 }

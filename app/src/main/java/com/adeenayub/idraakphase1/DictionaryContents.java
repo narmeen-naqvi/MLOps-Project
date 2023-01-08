@@ -17,11 +17,13 @@ public class DictionaryContents extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dictionary_contents);
 
-        VideoView videoView = findViewById(R.id.video1);
-        String vpath="android.resource://"+getPackageName()+"/"+R.raw.shape;
+        VideoView videoView = (VideoView) findViewById(R.id.video1);
+        String vpath="android.resource://"+getPackageName()+"/"+R.raw.animatic;
 
-        Uri videoUri = Uri.parse(vpath);
-        videoView.setVideoURI(videoUri);
+        videoView.setVideoPath(vpath);
+
+        //Uri videoUri = (Uri) Uri.parse(vpath);
+        //videoView.setVideoURI(videoUri);
         //videoView.start();
         Log.i("Video", "Video Playing....");
 
