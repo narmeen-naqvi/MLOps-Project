@@ -18,7 +18,7 @@ public class DictionaryContents extends AppCompatActivity {
         setContentView(R.layout.activity_dictionary_contents);
 
         VideoView videoView = (VideoView) findViewById(R.id.video1);
-        String vpath="android.resource://"+getPackageName()+"/"+R.raw.animatic;
+        String vpath="android.resource://"+getPackageName()+"/"+R.raw.karneval;
 
         videoView.setVideoPath(vpath);
 
