@@ -22,6 +22,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 import kotlin.jvm.internal.markers.KMutableList;
 
 public class RecordingScreen extends AppCompatActivity {
@@ -36,6 +49,7 @@ private AlertDialog.Builder dialogBuilder;
 private AlertDialog dialog;
 private TextView text_popupTitle, text_popupDescription,help_popupTitle,help_popupDescription;
 private Button text_cancelButton,help_cancelButton;
+String predictedclass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,6 +178,68 @@ private Button text_cancelButton,help_cancelButton;
         Intent iimgcap=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(iimgcap,IMAGE_CAPTURE_CODE);
     }
+
+//image flask
+    /*public String predictLetter(Uri imageFile) throws IOException, JSONException {
+        URL url = new URL("http://localhost:5000/predict");
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Content-Type", "image/jpeg");
+
+        // Set the image file as the request body
+        connection.setDoOutput(true);
+        OutputStream outputStream = connection.getOutputStream();
+        FileInputStream inputStream = new FileInputStream(imageFile);
+        byte[] buffer = new byte[4096];
+        int bytesRead;
+        while ((bytesRead = inputStream.read(buffer)) != -1) {
+            outputStream.write(buffer, 0, bytesRead);
+        }
+
+        // Read the response
+        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        StringBuilder responseBuilder = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            responseBuilder.append(line);
+        }
+
+        // Parse the response as JSON
+        JSONObject jsonResponse = new JSONObject(responseBuilder.toString());
+        String prediction = jsonResponse.getString("prediction");
+
+        return prediction;
+    }*/
+public String predictLetter(Uri imageUri) throws IOException, JSONException {
+    URL url = new URL("http://localhost:5000/predict");
+    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+    connection.setRequestMethod("POST");
+    connection.setRequestProperty("Content-Type", "image/jpeg");
+
+    // Set the image file as the request body
+    connection.setDoOutput(true);
+    OutputStream outputStream = connection.getOutputStream();
+    InputStream inputStream = getContentResolver().openInputStream(imageUri);
+    byte[] buffer = new byte[4096];
+    int bytesRead;
+    while ((bytesRead = inputStream.read(buffer)) != -1) {
+        outputStream.write(buffer, 0, bytesRead);
+    }
+
+    // Read the response
+    BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+    StringBuilder responseBuilder = new StringBuilder();
+    String line;
+    while ((line = reader.readLine()) != null) {
+        responseBuilder.append(line);
+    }
+
+    // Parse the response as JSON
+    JSONObject jsonResponse = new JSONObject(responseBuilder.toString());
+    String prediction = jsonResponse.getString("prediction");
+
+    return prediction;
+}
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -185,6 +261,17 @@ private Button text_cancelButton,help_cancelButton;
         if (requestCode == IMAGE_CAPTURE_CODE) {
             if (resultCode == RESULT_OK) {
                 imagePath = data.getData();
+                try {
+                    predictedclass=predictLetter(imagePath);
+                    // Display the predicted class in the TextView
+                    TextView textView = (TextView) findViewById(R.id.text_popup_description);
+                    textView.setText(predictedclass);
+
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
                 Log.i("Image_capture_tag","Image captured at path " + imagePath);
                 Toast.makeText(this, "Image captured successfully", Toast.LENGTH_SHORT).show();
             }

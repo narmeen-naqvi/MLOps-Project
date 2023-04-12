@@ -33,7 +33,7 @@ DBHelper DB;
         DB = new DBHelper(this);
 
         loginText.setOnClickListener(new View.OnClickListener() {
-            @Override
+            /*@Override
             public void onClick(View view) {
                 if(username.getText().toString().equals("") || password.getText().toString().equals("")){
                     Toast.makeText(MainActivity.this, "Username and password are required", Toast.LENGTH_SHORT).show();
@@ -41,7 +41,26 @@ DBHelper DB;
                 else{
                 Intent ilogin = new Intent(MainActivity.this,Login.class);
                 Toast.makeText(MainActivity.this, "Login completed", Toast.LENGTH_SHORT).show();
-                startActivity(ilogin);}
+                startActivity(ilogin);}}*/
+            @Override
+            public void onClick(View view) {
+                String user = username.getText().toString();
+                String pass = password.getText().toString();
+
+                if(user.equals("") || pass.equals("")){
+                    Toast.makeText(MainActivity.this, "Username and password are required", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Boolean checkuserpass = DB.checkusernamepassword(user,pass);
+                    if(checkuserpass == true){
+                        Toast.makeText(MainActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+                        Intent logintent = new Intent(getApplicationContext(),RecordingScreen.class);
+                        startActivity(logintent);
+                    }
+                    else{
+                        Toast.makeText(MainActivity.this, "Invalid credentials", Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         });
 
@@ -70,6 +89,7 @@ DBHelper DB;
                }}
         });
 
+        //checkbox-show password
         showPassword.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
