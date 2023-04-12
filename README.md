@@ -14,5 +14,5 @@ As an end product, Idra’ak will be an Android Application that takes input of 
 * Sign Language to text translation 
 * Urdu Language (signed words and text)
 * Urdu text to Urdu Audio (for illiterate people)
-* Signs (40 - 50) (Narrowed down to primary level student’s instruction + Alphabet)
+* Signs (35 - 40) (Narrowed down to primary level student’s (Alphabet))
 * Android Application
