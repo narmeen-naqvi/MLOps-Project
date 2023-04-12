@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "876664067838",
+    "project_id": "idraak-authentication",
+    "storage_bucket": "idraak-authentication.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:876664067838:android:9af559a8e05e670fad77af",
+        "android_client_info": {
+          "package_name": "com.adeenayub.idraakphase1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "876664067838-j3nea0i31515tjpvmuqhts79p5d715mq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsH8VBQ4wlKIrWJ9bqpb8MfDhXEW2AyaU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "876664067838-j3nea0i31515tjpvmuqhts79p5d715mq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
