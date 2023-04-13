@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -19,15 +20,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -35,15 +36,15 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import kotlin.jvm.internal.markers.KMutableList;
-
 public class RecordingScreen extends AppCompatActivity {
-ImageView record,camera;
+ImageView record,camera,uploadpicture;
+
 //video stuff
 private static int CAMERA_PERMISSION_CODE = 100;
 private static int VIDEO_RECORD_CODE = 101;
 private static int IMAGE_CAPTURE_CODE = 102;
 private Uri videoPath, imagePath;
+VideoView uploadvideo;
 //popup
 private AlertDialog.Builder dialogBuilder;
 private AlertDialog dialog;
@@ -58,10 +59,12 @@ String predictedclass;
 
         record = findViewById(R.id.record_button);
         camera = findViewById(R.id.camera_button);
+        uploadpicture = findViewById(R.id.taken_picture);
+        uploadvideo = findViewById(R.id.taken_video);
 
         camera.setOnClickListener(v -> {
             //using this for image capture for now
-            Toast.makeText(this, "Stop clicked", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Camera clicked", Toast.LENGTH_SHORT).show();
             if (isCameraPresentInPhone()){
                 Log.i("Image_capture_tag","Camera is detected");
                 getCameraPermission();
@@ -120,9 +123,9 @@ String predictedclass;
     public void createTextPopup(){
         dialogBuilder = new AlertDialog.Builder(this);
         final View textPopupView = getLayoutInflater().inflate(R.layout.text_popup, null);
-        text_popupTitle = (TextView) textPopupView.findViewById(R.id.text_popup_title);
-        text_popupDescription = (TextView) textPopupView.findViewById(R.id.text_popup_description);
-        text_cancelButton = (Button) textPopupView.findViewById(R.id.text_popup_button);
+        text_popupTitle = textPopupView.findViewById(R.id.text_popup_title);
+        text_popupDescription = textPopupView.findViewById(R.id.text_popup_description);
+        text_cancelButton = textPopupView.findViewById(R.id.text_popup_button);
 
         dialogBuilder.setView(textPopupView);
         dialog = dialogBuilder.create();
@@ -138,9 +141,9 @@ String predictedclass;
     public void createHelpPopup(){
         dialogBuilder = new AlertDialog.Builder(this);
         final View helpPopupView = getLayoutInflater().inflate(R.layout.help_popup, null);
-        help_popupTitle = (TextView) helpPopupView.findViewById(R.id.help_popup_title);
-        help_popupDescription = (TextView) helpPopupView.findViewById(R.id.help_popup_description);
-        help_cancelButton = (Button) helpPopupView.findViewById(R.id.help_popup_button);
+        help_popupTitle = helpPopupView.findViewById(R.id.help_popup_title);
+        help_popupDescription = helpPopupView.findViewById(R.id.help_popup_description);
+        help_cancelButton = helpPopupView.findViewById(R.id.help_popup_button);
 
         dialogBuilder.setView(helpPopupView);
         dialog = dialogBuilder.create();
@@ -211,7 +214,7 @@ String predictedclass;
         return prediction;
     }*/
 public String predictLetter(Uri imageUri) throws IOException, JSONException {
-    URL url = new URL("http://localhost:5000/predict");
+    URL url = new URL("http://127.0.0.1:5000/predict");
     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
     connection.setRequestMethod("POST");
     connection.setRequestProperty("Content-Type", "image/jpeg");
@@ -245,6 +248,13 @@ public String predictLetter(Uri imageUri) throws IOException, JSONException {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == VIDEO_RECORD_CODE) {
             if (resultCode == RESULT_OK) {
+                //display video
+                uploadvideo.setVideoURI(data.getData());
+                //uploadvideo.start();
+                MediaController mediaController = new MediaController(this);
+                uploadvideo.setMediaController(mediaController);
+                mediaController.setAnchorView(uploadvideo);
+                //storage
                 videoPath = data.getData();
                 Log.i("Video_record_tag","Video recorded at path " + videoPath);
                 Toast.makeText(this, "Video recorded successfully", Toast.LENGTH_SHORT).show();
@@ -259,21 +269,26 @@ public String predictLetter(Uri imageUri) throws IOException, JSONException {
             }
         }
         if (requestCode == IMAGE_CAPTURE_CODE) {
-            if (resultCode == RESULT_OK) {
+            if (resultCode == RESULT_OK && data != null) {
+                //upload image
+                Bundle bundle= data.getExtras();
+                Bitmap finalphoto=(Bitmap) bundle.get("data");
+                uploadpicture.setImageBitmap(finalphoto);
+                //predict image
                 imagePath = data.getData();
-                try {
+                Log.i("Image_capture_tag","Image captured at path " + imagePath);
+                Toast.makeText(this, "Image captured successfully", Toast.LENGTH_SHORT).show();
+                /*try {
                     predictedclass=predictLetter(imagePath);
                     // Display the predicted class in the TextView
-                    TextView textView = (TextView) findViewById(R.id.text_popup_description);
+                    TextView textView = findViewById(R.id.text_popup_description);
                     textView.setText(predictedclass);
 
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
-                }
-                Log.i("Image_capture_tag","Image captured at path " + imagePath);
-                Toast.makeText(this, "Image captured successfully", Toast.LENGTH_SHORT).show();
+                }*/
             }
             else if (resultCode == RESULT_CANCELED) {
                 Log.i("Image_capture_tag","Image capture cancelled");
