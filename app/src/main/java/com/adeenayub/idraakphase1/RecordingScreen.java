@@ -6,7 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import android.Manifest;
+import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -32,6 +34,7 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -93,29 +96,30 @@ String selectedImagePath;
         });
 
         connect.setOnClickListener(v -> {
-            String postUrl = "http://192.168.1.6:5000/";
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inPreferredConfig = Bitmap.Config.RGB_565;
-            // Read BitMap by file path
-            Bitmap bitmap = BitmapFactory.decodeFile(selectedImagePath, options);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-            byte[] byteArray = stream.toByteArray();
 
-            RequestBody postBodyImage = new MultipartBody.Builder()
-                    .setType(MultipartBody.FORM)
-                    .addFormDataPart("image", "androidFlask.jpg", RequestBody.create(MediaType.parse("image/*jpg"), byteArray))
-                    .build();
-
-            TextView responseText = findViewById(R.id.responseText);
-            responseText.setText("Please wait ...");
-
-            postRequest(postUrl, postBodyImage);
-
-            //String postBodyText = "Hello";
-            //MediaType mediaType = MediaType.parse("text/plain; charset=utf-8");
-            //RequestBody postBody = RequestBody.create(mediaType, postBodyText);
-            //postRequest(postUrl, postBody);
+            String postUrl = "http://172.17.50.18:5000/";
+//            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//            BitmapFactory.Options options = new BitmapFactory.Options();
+//            options.inPreferredConfig = Bitmap.Config.RGB_565;
+//            // Read BitMap by file path
+//            Bitmap bitmap = BitmapFactory.decodeFile(selectedImagePath, options);
+//            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+//            byte[] byteArray = stream.toByteArray();
+//            Toast.makeText(RecordingScreen.this, "Before", Toast.LENGTH_SHORT).show();
+//            RequestBody postBodyImage = new MultipartBody.Builder()
+//                    .setType(MultipartBody.FORM)
+//                    .addFormDataPart("image", "androidFlask.jpg", RequestBody.create(MediaType.parse("image/*jpg"), byteArray))
+//                    .build();
+//            Toast.makeText(RecordingScreen.this, "After", Toast.LENGTH_SHORT).show();
+//            TextView responseText = findViewById(R.id.responseText);
+//            responseText.setText("Please wait ...");
+//            Toast.makeText(RecordingScreen.this, "Before post request", Toast.LENGTH_SHORT).show();
+//            postRequest(postUrl, postBodyImage);
+//            Toast.makeText(RecordingScreen.this, "after post request", Toast.LENGTH_SHORT).show();
+            String postBodyText = "Hello";
+            MediaType mediaType = MediaType.parse("text/plain; charset=utf-8");
+            RequestBody postBody = RequestBody.create(mediaType, postBodyText);
+            postRequest(postUrl, postBody);
         });
     }
     private void postRequest(String postUrl, RequestBody postBody) {
@@ -148,6 +152,7 @@ String selectedImagePath;
                     public void run() {
                         TextView responseText = findViewById(R.id.responseText);
                         try {
+                            assert response.body() != null;
                             responseText.setText(response.body().string());
                             Toast.makeText(RecordingScreen.this, "Connected to server", Toast.LENGTH_SHORT).show();
                         } catch (IOException e) {
@@ -349,7 +354,27 @@ String selectedImagePath;
                 uploadpicture.setImageBitmap(finalphoto);
                 //predict image
                 imagePath = data.getData();
-                selectedImagePath = getPath(getApplicationContext(), imagePath);
+                // Get the image file URI
+                Uri imageUri = Uri.fromFile(new File(String.valueOf(imagePath)));
+
+// Define the content values for the new image
+                ContentValues values = new ContentValues();
+                values.put(MediaStore.Images.Media.TITLE, "My Image Title");
+                values.put(MediaStore.Images.Media.DESCRIPTION, "My Image Description");
+                values.put(MediaStore.Images.Media.DATE_ADDED, System.currentTimeMillis());
+                values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpg");
+                values.put(MediaStore.Images.Media.ORIENTATION, 0);
+                values.put(MediaStore.Images.Media.DATA, String.valueOf(imagePath));
+// Save the image to the gallery
+                ContentResolver contentResolver = getContentResolver();
+                Uri uri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+// Notify the gallery app that a new image has been added
+                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri));
+
+                selectedImagePath = getPath(getApplicationContext(), imageUri);
+                Toast.makeText(RecordingScreen.this, "Before", Toast.LENGTH_SHORT).show();
+
                 Toast.makeText(getApplicationContext(), selectedImagePath, Toast.LENGTH_LONG).show();
 
                 Log.i("Image_capture_tag","Image captured at path " + imagePath);
