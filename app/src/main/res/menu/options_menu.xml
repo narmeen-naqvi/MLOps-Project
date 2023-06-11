@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/overflowMenu"
+        android:icon="@drawable/menu"
+        android:title="MENU"
+        app:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/text_option"
+                android:title="TEXT"
+                android:icon="@drawable/text"/>
+
+            <item
+                android:id="@+id/audio_option"
+                android:title="AUDIO"
+                android:icon="@drawable/sound"/>
+
+            <item
+                android:id="@+id/dictionary_option"
+                android:title="DICTIONARY"
+                android:icon="@drawable/dictionary"/>
+
+            <item
+                android:id="@+id/help_option"
+                android:title="HELP"
+                android:icon="@drawable/help"/>
+        </menu>
+    </item>
+</menu>
