@@ -1,0 +1,43 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                // Checkout the source code from the repository
+                git 'https://github.com/narmeen-naqvi/MLOps-Project.git'
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                // Build the Docker image for the Flask API
+                script {
+                    docker.build('flask-api-image:latest', '-f Dockerfile .')
+                }
+            }
+        }
+        
+        stage('Test') {
+            steps {
+                // Run tests for the Flask API
+                script {
+                    docker.image('flask-api-image:latest').inside {
+                        sh 'pytest tests/'
+                    }
+                }
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                // Deploy the Flask API container
+                script {
+                    docker.image('flask-api-image:latest').withRun('-p 5000:5000') {
+                        sh 'echo "Flask API deployed"'
+                    }
+                }
+            }
+        }
+    }
+}
